@@ -192,7 +192,7 @@ public class AppTest {
         zipCodeBox.sendKeys("A1B2C3");
         WebElement mobileNumberBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("mobile_number")));
         mobileNumberBox.sendKeys("1234567890");
-        takeScreenshot("testCase01"); // screenshot5    
+        takeScreenshot("testCase01"); // screenshot5    done
         // Click 'Create Account' button
         // Locate and click "Create Account"
         WebElement createAccBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Create Account']")));
