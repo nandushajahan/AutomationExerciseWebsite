@@ -229,6 +229,52 @@ public void deleteAccount()
         continueBtn2.click();
 }
 
+public boolean signIn(String userName, String password) {
+    String email = userName + "@gmail.com";
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+    // Click on 'Signup / Login' button
+    WebElement signUpLogin2 = wait.until(ExpectedConditions.elementToBeClickable(
+        By.xpath("//i[contains(@class,\"lock\")]")));
+    signUpLogin2.click();
+
+    // Verify 'Login to your account' is visible
+    WebElement loginMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//h2[text()='Login to your account']")));
+    Assert.assertTrue(loginMsg.isDisplayed(), "'Login to your account' is not visible");
+    takeScreenshot("signIn1");
+
+    // Enter email and password
+    WebElement emailBox2 = wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//input[@data-qa='login-email']")));
+    emailBox2.sendKeys(email);
+
+    WebElement pwdBox2 = wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//input[@data-qa='login-password']")));
+    pwdBox2.sendKeys(password);
+    takeScreenshot("signIn2");
+
+    // Click 'Login' button
+    WebElement loginBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//button[@data-qa='login-button']")));
+    loginBtn.click();
+
+    // Handle success or failure
+    try {
+        WebElement loggedIn = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//a[text()=\" Logged in as \"]")));
+        takeScreenshot("SignedInSuccess");
+        System.out.println("Login successful: " + loggedIn.getText());
+        return true;
+    } catch (Exception e) {
+        WebElement errorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//p[text()='Your email or password is incorrect!']")));
+        takeScreenshot("SignInFailed");
+        System.out.println("Login failed: " + errorMsg.getText());
+        return false;
+    }
+}
+
     
 // Test Cases
 
@@ -239,174 +285,29 @@ public void testCase01() {
     gotoHomepage();
     takeScreenshot("gotoHomepage");
     signUp("testedUser12","testing123");
-    deleteAccount();
+    //deleteAccount();
 }
 
 
     @Test
     public void testCase02() {
-        currentTestName = "testCase01";
+        currentTestName = "testCase02";
         screenshotCount = 1;
         gotoHomepage();
         takeScreenshot("gotoHomepage");
-
-        // Placeholder for Test Case 02
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        screenshotCount=1;
-        // Navigate to site
-        driver.get("https://automationexercise.com/");
-        takeScreenshot("testCase02"); // screenshot1
-        //Click on 'Signup / Login' button
-        WebElement signUpLogin = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[contains(@class,\"lock\")]")));
-        signUpLogin.click();
-        // perform signup with new user
-        // Verify 'New User Signup!' is visible
-        // Assertion: Check that the "New User Signup!" text is displayed
-        takeScreenshot("testCase02"); // screenshot2
-        WebElement signUpMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[text()='New User Signup!']")));
-        Assert.assertTrue(signUpMsg.isDisplayed(),"'New User Signup!' is not visible");
-        // Enter name and email address
-        // Locate input fields and pass test data
-        WebElement nameBox= wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='Name']")));
-        nameBox.sendKeys("testingUser");
-        WebElement emailBox= wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='Name']/following-sibling::input[contains(@placeholder,'Email')]")));
-        emailBox.sendKeys("testinguser44@gmail.com");
-        takeScreenshot("testCase02");   // screenshot3
-        // Click 'Signup' button
-        // Locate and click the "Signup" button
-        WebElement signUpBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Signup']")));
-        signUpBtn.click();
-        // Verify that 'ENTER ACCOUNT INFORMATION' is visible
-        // Assertion: Validate that the "ENTER ACCOUNT INFORMATION" section appears
-        WebElement enterAccInfo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//b[text()='Enter Account Information']")));
-        Assert.assertTrue(enterAccInfo.isDisplayed(),"'ENTER ACCOUNT INFORMATION' is not visible");
-        takeScreenshot("testCase02"); // screenshot4
-        // Fill details: Title, Name, Email, Password, Date of birth
-        // Enter personal details and select dropdowns for DOB
-        WebElement gender= wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@id,'gender1')]")));
-        gender.click();
-        WebElement pwdBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
-        pwdBox.sendKeys("testing123");
-        WebElement daySelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("days")));
-        Select day = new Select(daySelect);
-        day.selectByValue("10");
-        WebElement monthSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("months")));
-        Select month = new Select(monthSelect);
-        month.selectByIndex(5);  
-        WebElement yearSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("years")));
-        Select year = new Select(yearSelect);
-        year.selectByValue("1990");
-        // Select checkbox 'Sign up for our newsletter!'
-        // Locate newsletter checkbox and select it
-        WebElement newsletter= wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("newsletter")));
-        newsletter.click();
-        takeScreenshot("testCase02"); // screenshot5
-
-        // Fill details: First name, Last name, Company, Address, Address2, Country, State, City, Zipcode, Mobile Number
-        // Enter additional address and contact details
-        WebElement firstNameBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("first_name")));
-        firstNameBox.sendKeys("testing");
-        WebElement lastNameBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("last_name")));
-        lastNameBox.sendKeys("User");
-        WebElement companyBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("company")));
-        companyBox.sendKeys("TestingCompany");
-        WebElement address1Box = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("address1")));
-        address1Box.sendKeys("123 Testing Address");
-        WebElement address2Box = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("address2")));
-        address2Box.sendKeys("456 Testing Address 2");
-        WebElement countrySelectBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("country")));
-        Select country = new Select(countrySelectBox);
-        country.selectByVisibleText("Canada");
-        WebElement stateBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("state")));
-        stateBox.sendKeys("TestingState");
-        WebElement cityBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("city")));
-        cityBox.sendKeys("TestingCity");
-        WebElement zipCodeBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("zipcode")));
-        zipCodeBox.sendKeys("A1B2C3");
-        WebElement mobileNumberBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("mobile_number")));
-        mobileNumberBox.sendKeys("1234567890");
-        takeScreenshot("testCase02"); // screenshot6    
-        // Click 'Create Account' button
-        // Locate and click "Create Account"
-        WebElement createAccBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Create Account']")));
-        createAccBtn.click();
-        takeScreenshot("testCase02"); // screenshot7
-        // Verify that 'ACCOUNT CREATED!' is visible
-        // Assertion: Check that confirmation text "ACCOUNT CREATED!" is displayed
-        Assert.assertTrue(wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//b[text()='Account Created!']"))).isDisplayed(),"'ACCOUNT CREATED!' is not visible");
-        // Click 'Continue' button  
-        // Locate and click "Continue"
-        WebElement continueBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Continue']")));
-        continueBtn.click();
-        // Verify that 'Logged in as username' is visible
-        // Assertion: Validate user is logged in with the correct username
-        Assert.assertTrue(wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\" Logged in as \"]"))).isDisplayed(),"'Logged in as username' is not visible");
-        takeScreenshot("testCase02"); // screenshot8
-        //click logout
-        WebElement logoutBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@href='/logout']")));
-        logoutBtn.click();
-        //Click on 'Signup / Login' button
-        WebElement signUpLogin2 = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[contains(@class,\"lock\")]")));
-        signUpLogin2.click();
-        //Verify 'Login to your account' is visible
-        WebElement loginMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[text()='Login to your account']")));
-        Assert.assertTrue(loginMsg.isDisplayed(),"'Login to your account' is not visible");
-        takeScreenshot("testCase02"); // screenshot9
-        //Enter  correct email address and password
-        WebElement emailBox2= wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@data-qa='login-email']")));
-        emailBox2.sendKeys("testinguser44@gmail.com");
-        WebElement pwdBox2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@data-qa='login-password']")));
-        pwdBox2.sendKeys("testing123");
-        takeScreenshot("testCase02"); // screenshot10
-        //Click 'Login' button
-        WebElement loginBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@data-qa='login-button']")));
-        loginBtn.click();
-        //Verify that 'Logged in as username' is visible
-        Assert.assertTrue(wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\" Logged in as \"]"))).isDisplayed(),"'Logged in as username' is not visible");
-        //Click 'Delete Account' button
-        WebElement deleteAccount = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=\" Delete Account\"]")));
-        deleteAccount.click();
-        //Verify that 'ACCOUNT DELETED!' is visible and click 'Continue' button
-        Assert.assertTrue(wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//b[text()='Account Deleted!']"))).isDisplayed(),"\"ACCOUNT DELETED!\" message is not displayed");
-        WebElement continueBtn2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Continue']")));
-        takeScreenshot("testCase02"); // screenshot11
-        continueBtn2.click();
+        signIn("testedUser12","testing123");
+        deleteAccount();
     }
 
-    @Test(enabled = false)
+    @Test
     public void testCase03() {
     // Navigate to url 'http://automationexercise.com'
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         screenshotCount=1;
-        // Navigate to site
-        driver.get("https://automationexercise.com/");
-        takeScreenshot("testCase03"); // screenshot1
-        String title1 = driver.getTitle();
-        System.out.println("Page title is: " + title1);
-        // Verify that home page is visible successfully
-        Assert.assertTrue(title1.contains("Automation"), "Title did not contain 'Automation'");
-    
-    // Click on 'Signup / Login' button
-        WebElement signUpLogin = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//i[contains(@class,\"lock\")]")));
-        signUpLogin.click();
-    // Verify 'Login to your account' is visible
-        WebElement loginMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[text()='Login to your account']")));
-        Assert.assertTrue(loginMsg.isDisplayed(),"'Login to your account' is not visible");
-        takeScreenshot("testCase03"); // screenshot2
-    // Enter incorrect email address and password
-        WebElement emailBox2= wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@data-qa='login-email']")));
-        emailBox2.sendKeys("betb@gmail.com");
-        WebElement pwdBox2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@data-qa='login-password']")));
-        pwdBox2.sendKeys("betb123");
-        takeScreenshot("testCase03"); // screenshot3
-    // Click 'login' button
-        WebElement loginBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@data-qa='login-button']")));
-        loginBtn.click();
-        takeScreenshot("testCase03"); // screenshot4
-    // Verify error 'Your email or password is incorrect!' is visible
-        WebElement errorMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[text()='Your email or password is incorrect!']")));
-        Assert.assertTrue(errorMsg.isDisplayed(),"'Your email or password is incorrect!' is not visible");
-        takeScreenshot("testCase03"); // screenshot5
+        currentTestName = "testCase03";
+        gotoHomepage();
+        boolean loggedIn = signIn("unknownUser","password123");
+        Assert.assertFalse(loggedIn, "Login should fail with invalid credentials");
+
     }
 
     @Test(enabled = false)
